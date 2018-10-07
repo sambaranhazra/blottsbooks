@@ -162,5 +162,22 @@
 (binding [*debug-enabled* true]
   (debug "Hello World")
   )
+
+(def numbers (iterate inc 1))
+(def titles (map #(str "Wheel of time book " %) numbers))
+(def first-name ["Bob" "Jane" "Chuck" "Leo"])
+(def last-name ["Smith" "Smith" "Clark" "Tolstoy"])
+(defn combine-name [first last]
+  (str first " " last))
+(def authors
+  (map combine-name (cycle first-name) (cycle last-name)))
+
+(defn make-book [title author]
+  {:author author :title title})
+
+(def test-books (map make-book titles authors))
+(def author-books (->> (take 299 test-books)
+                       (group-by :author)
+                       (reduce-kv #(assoc %1 %2 (count %3)) {})))
 (defn -main []
   (say-welcome "BlottsBooks"))
